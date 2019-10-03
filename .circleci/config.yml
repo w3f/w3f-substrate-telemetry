@@ -2,6 +2,8 @@ version: 2
 
 jobs:
   integrationTests:
+    environment:
+      HELM_ENV: ci
     docker:
       - image: web3f/ci-commons:v1.4.0
     steps:
