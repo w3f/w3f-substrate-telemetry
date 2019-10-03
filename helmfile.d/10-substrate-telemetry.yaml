@@ -11,4 +11,5 @@ releases:
   chart: w3f/substrate-telemetry
   version: v0.5.8
   values:
+  - environment: {{ .Environment.Name }}
   - ./config/substrate-telemetry-values.yaml.gotmpl
