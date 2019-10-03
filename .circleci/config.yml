@@ -1,0 +1,43 @@
+version: 2
+
+jobs:
+  integrationTests:
+    docker:
+      - image: web3f/ci-commons:v1.4.0
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          description: run integration tests
+          command: |
+            /scripts/integration-tests.sh
+
+  deploy:
+    environment:
+      HELM_ENV: production
+    docker:
+      - image: web3f/ci-commons:v1.4.0
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            /scripts/deploy.sh
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - integrationTests:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - integrationTests
